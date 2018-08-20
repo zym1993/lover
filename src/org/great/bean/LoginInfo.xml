@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="org.great.mapper.LoginMapper">
+	<select id="findAll" resultType="org.great.bean.Tbladmin">
+		select * from Tbladmin
+	</select>
+	<select id="findByAccount" resultType="org.great.bean.Tbladmin">
+		select * from Tbladmin where adaccount=#{uname}
+	</select>
+	<select id="findTblparam" resultType="org.great.bean.Tblparam">
+		select * from Tblparam where parampid=1
+	</select>
+	<select id="findTblparamAll" resultType="org.great.bean.Tblparam">
+		select * from Tblparam 
+	</select>
+	
+	<select id="tblrolepowerAll" resultType="org.great.bean.Tblrolepower">
+		select * from Tblrolepower where roleid=#{i}
+	</select>
+	
+	<select id="tblpowers" resultType="org.great.bean.Tblpower">
+		select * from Tblpower where powid=#{powid}
+	</select>
+	<select id="tblmenus" resultType="org.great.bean.Tblmenu">
+		select * from Tblmenu where menpid=#{menpid}
+	</select>
+	
+	
+	<select id="findByAccount1" resultType="org.great.bean.Tbladmin">
+		select * from Tbladmin where adaccount=#{adaccount}
+	</select>
+	<select id="tbladminlist" resultType="org.great.bean.Tbladmin">
+  	 	select * from Tbladmin 
+  	</select>
+  	<select id="tbladminCount" resultType="int">
+  	 	select count(*) from Tbladmin 
+  	</select>
+    
+    <!-- 添加人员 -->
+    <insert id="insertAdmin" parameterType="org.great.bean.Tbladmin">
+    begin
+     	<selectKey keyProperty="adminid" order="BEFORE" resultType="java.lang.Integer">
+     	   select SEQTBLADMIN.nextval from dual
+     	</selectKey>
+   	
+       	insert into Tbladmin (adminid,adaccount,adpassword,adname) values(#{adminid},#{adaccount},#{adpassword},#{adname});
+     end;
+    </insert>
+    
+    <delete id="deleteAdmin" parameterType="org.great.bean.Tbladmin">
+    	delete Tbladmin where adminid =#{adminid}
+    </delete>
+     <select id="updateAdmin" parameterType="org.great.bean.Tbladmin">
+    	update Tbladmin set adaccount=#{adaccount} where adminid=#{adminid}
+    </select>
+</mapper>
+ 

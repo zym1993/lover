@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.great.mapper.AdminMapper">
+  	<select id="tbladminlist" resultType="org.great.bean.Tbladmin">
+  	 	select * from Tbladmin 
+  	</select>
+  	<select id="tbladminCount" resultType="int">
+  	 	select count(*) from Tbladmin 
+  	</select>
+    
+    <!-- 添加人员 -->
+    <insert id="insertAdmin" parameterType="org.great.bean.Tbladmin">
+    begin
+     	<selectKey keyProperty="adminid" order="BEFORE" resultType="java.lang.Integer">
+     	   select SEQTBLADMIN.nextval from dual
+     	</selectKey>
+   	
+       	insert into Tbladmin (adminid,adaccount,adpassword,adname) values(#{adminid},#{adaccount},#{adpassword},#{adname});
+     end;
+    </insert>
+</mapper>

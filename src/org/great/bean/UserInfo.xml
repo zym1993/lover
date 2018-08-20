@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.great.mapper.mapper">
+    <!--  <insert  id="insetAdmin" parameterType="org.great.bean.Tbladmin">
+       	insert into Tbladmin (adminid,adaccount,adpassword) 
+       	values(#{adminid},#{adaccount},#{adpassword})
+     </insert> -->
+      <select  id="selectAdmin" resultType="org.great.bean.Tbladmin">
+       <!-- 	select * from Tbladmin where adaccount =#{adaccount} -->
+       	select * from Tbladmin 
+     </select>
+     
+     <resultMap type="org.great.bean.Tbladmin1"  id="selectAdmin1">
+     	
+     	<result property="adminid1" column="adminid"/>
+     	<result property="adaccount1" column="adaccount"/>
+     	<result property="adpassword1" column="adpassword"/>
+     	<result property="adname1" column="adname"/>
+     	<result property="roleid1" column="roleid"/>
+     	<result property="regisertime1" column="regisertime"/>
+     	<result property="paramid1" column="paramid"/>
+     </resultMap>
+     <!-- <select  id="selectAdmin22" resultMap="selectAdmin1"  parameterType="String">
+       	select * from Tbladmin 
+     </select> -->
+     <!-- <delete  id="deleteAdmin" parameterType="org.great.bean.Tbladmin">
+     
+       	delete Tbladmin where adminid=#{adminid}
+     </delete> -->
+     <select id="selectAdmin22"  resultMap="selectAdmin1" parameterType="org.great.bean.Tbladmin">
+		  select * from Tbladmin where 1=1
+		  <if test="adname1 !=null">
+		  		and adname like #{adname1}
+		  </if>
+		  order by adminid
+	 </select>
+     
+     
+     <delete  id="deleteAdmin" parameterType="org.great.bean.Tbladmin">
+     
+       	delete Tbladmin where adminid in
+       	<foreach collection="adminlist" item="admins" open="(" separator="," close=")">
+       	    #{admins}
+       	</foreach>
+     </delete>
+     
+     <update  id="updateAdmin" parameterType="org.great.bean.Tbladmin">
+     
+       	<!-- update Tbladmin set adaccount=#{adaccount} where adminid=#{adminid} -->
+       	update Tbladmin  
+       	<set>
+       	<if test="adaccount !=null">
+       	     adaccount=#{adaccount},
+       	</if>
+       
+       	</set>
+       	where adminid=#{adminid}
+     </update>
+     <insert  id="insetAdmin" parameterType="java.util.List">
+     	<selectKey keyProperty="adminid" order="BEFORE"  resultType="java.lang.Integer">
+     		select SEQTBLADMIN.nextval from dual
+     	</selectKey>
+     begin
+     <foreach collection="list" item="item" index="index"> 
+      	
+       	insert into Tbladmin (adminid,adaccount,adpassword,adname) 
+       	values(#{item.adminid},#{item.adaccount},#{item.adpassword},#{item.adname});
+      </foreach>
+      end;
+     </insert>
+     
+	<!-- <select id="getRole" parameterType="Integer" resultType="org.great.bean.Tblrole">
+		select * from tblrole where roleid=#{id}
+	</select>
+	
+	<resultMap type="org.great.bean.Tbladmin" id="empMap">
+		<association property="tblrole"  column="roleid" javaType="org.great.bean.Tblrole" select="getRole">
+		</association>
+	</resultMap>
+	<select id="getEmp" parameterType="Integer" resultMap="empMap" >
+	      select * from Tbladmin where adminid=#{adminid}
+	</select>  -->
+	
+	
+	
+	 <select id="getEmp" parameterType="java.lang.Integer" resultMap="empMap" >
+	 	select a.* ,c.* from tbladmin a inner join tblrole c on (c.roleid = a.roleid) where a.adminid=#{adminid} 
+	 </select>
+	 
+	 <resultMap type="org.great.bean.Tbladmin" id="empMap">
+	 	<id property="adminid" column="adminid" ></id>
+	 	<result property="adaccount" column="adaccount"/>
+	 	<result property="adpassword" column="adpassword"/>
+	 	<result property="adname" column="adname"/>
+	 	<result property="roleid" column="roleid"/>
+	 	<result property="regisertime" column="regisertime"/>
+	 	<result property="paramid" column="paramid"/>
+	 	<association property="tblrole" column="empMap" javaType="org.great.bean.Tblrole">
+	 		<id property="roleid" column="roleid"></id>
+	 		<result property="roleName" column="roleName"/>
+	 	</association>	
+	 	
+	 </resultMap>
+	 
+	 
+	 
+	 <select id="getRole" parameterType="java.lang.Integer" resultMap="roleMap">
+	 	select a.*, c.* from tblrole c inner join tbladmin a on (c.roleid = a.roleid ) where c.roleid=#{roleid} 
+	 </select>
+	 
+	 <resultMap type="org.great.bean.Tblrole" id="roleMap">
+	    <id property="roleid" column="roleid"></id>
+	 	<result property="roleName" column="roleName"/>
+	    <collection property="tbladmins1" ofType="org.great.bean.Tbladmin" column="roleMap" javaType="java.util.ArrayList">
+	    <id property="adminid" column="adminid" ></id>
+	 	<result property="adaccount" column="adaccount"/>
+	 	<result property="adpassword" column="adpassword"/>
+	 	<result property="adname" column="adname"/>
+	 	<result property="roleid" column="roleid"/>
+	 	<result property="regisertime" column="regisertime"/>
+	 	<result property="paramid" column="paramid"/>
+	    </collection>
+	 </resultMap>
+</mapper>
